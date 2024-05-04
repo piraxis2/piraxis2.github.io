@@ -50,6 +50,8 @@ dash:
 # Build settings
 theme: jekyll-dash
 
+future: true
+
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
