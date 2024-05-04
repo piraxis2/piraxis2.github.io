@@ -51,6 +51,7 @@ dash:
 theme: jekyll-dash
 
 future: true
+timezone: Asia/Seoul
 
 plugins:
  - jekyll-feed
