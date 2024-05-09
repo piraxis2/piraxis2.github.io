@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html class="direction--ltr"lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox | piraxis</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="예전에 만들어 뒀던걸 정리하는 포스트" />
+<meta property="og:description" content="예전에 만들어 뒀던걸 정리하는 포스트" />
+<link rel="canonical" href="https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html" />
+<meta property="og:url" content="https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html" />
+<meta property="og:site_name" content="piraxis" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-06T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"GitHub User"},"dateModified":"2024-05-06T00:00:00+09:00","datePublished":"2024-05-06T00:00:00+09:00","description":"예전에 만들어 뒀던걸 정리하는 포스트","headline":"[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox","mainEntityOfPage":{"@type":"WebPage","@id":"https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html"},"url":"https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/assets/css/magnific-popup.css"><link type="application/atom+xml" rel="alternate" href="https://piraxis2.github.io//feed.xml" title="piraxis" /><script src="https://code.jquery.com/jquery-3.2.0.min.js"></script> 
+  <script src="/assets/js/jquery.magnific-popup.js"></script>
+</head>
+<body><div class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">piraxis<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
+    <span class="social_links">
+        
+        
+        <a class="color-purple-hover" href="https://github.com/piraxis2"><i class="fab fa-github-square"></i></a>
+        
+        
+    </span>
+  </div>
+</div>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+  <div class="author-box">
+
+
+<img src="
+    https://github.com/piraxis2.png
+" class="author-avatar" alt="Avatar" />
+<div class="description">hi
+</div>
+
+</div>
+
+
+<div class="post">
+  <h1 class="post-title">[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox</h1>
+  
+  <div class="post-tags">
+      
+      <a class="tag" href="/tag/ue5%2C/">UE5,</a>
+      
+      <a class="tag" href="/tag/uscrollbox/">UScrollBox</a>
+      
+  </div>
+  
+  <div class="post-date">
+    Published on 06 May 2024
+    
+  </div>
+  
+  <p>예전에 만들어 뒀던걸 정리하는 포스트</p>
+
+<p><img src="/assets/img/RefAnimation.gif" alt="image" /><em>이런 형태의 지정한 곳에서 가장 가까운 자식 위젯을 끌어당기며 강조하는 위젯이 필요하다.</em></p>
+
+<ol>
+  <li>
+    <h3 id="스크롤의-0번-자식-위젯과-num-1번-자식-위젯이-최상단-혹은-최하단에-위치하지-않도록-공간-만들기">스크롤의 0번 자식 위젯과 (Num-1)번 자식 위젯이 최상단 혹은 최하단에 위치하지 않도록 공간 만들기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">FillEmptyArea</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="n">FVector2D</span> <span class="n">EmptySize2D</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">()</span> <span class="o">*</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mf">0.5</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.5</span><span class="n">f</span><span class="p">);</span>
+ <span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="k">auto</span> <span class="n">NewSlotArguments</span> <span class="o">=</span> <span class="n">SScrollBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">();</span>
+     <span class="n">SScrollBox</span><span class="o">::</span><span class="n">FSlot</span><span class="o">&amp;</span> <span class="n">NewSlot</span> <span class="o">=</span> <span class="o">*</span><span class="n">NewSlotArguments</span><span class="p">.</span><span class="n">GetSlot</span><span class="p">();</span>
+     <span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SSpacer</span><span class="o">&gt;</span> <span class="n">Spacer</span> <span class="o">=</span> <span class="n">SNew</span><span class="p">(</span><span class="n">SSpacer</span><span class="p">).</span><span class="n">Size</span><span class="p">(</span><span class="n">EmptySize2D</span><span class="p">);</span>
+     <span class="n">NewSlot</span>
+     <span class="p">[</span>
+       <span class="n">Spacer</span>
+     <span class="p">];</span>
+     <span class="n">ScrollPanel</span><span class="o">-&gt;</span><span class="n">Children</span><span class="p">.</span><span class="n">InsertSlot</span><span class="p">(</span><span class="n">MoveTemp</span><span class="p">(</span><span class="n">NewSlotArguments</span><span class="p">),</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">ScrollPanel</span><span class="o">-&gt;</span><span class="n">Children</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+ <span class="p">}</span>	
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <p>해당 함수는 <code class="language-plaintext highlighter-rouge">tick</code>에서 <code class="language-plaintext highlighter-rouge">SAutoSelectScrollBox</code>의<code class="language-plaintext highlighter-rouge">CachedGeometry</code>가 채워질 때 까지 기다렸다가 호출된다. (위젯의 Geometry가 계산되기 전에 위젯의 크기를 가져오려 하면 0을 반환하기 때문)</p>
+  </li>
+  <li>
+    <h3 id="스크롤이-끝나면-현재-스크롤-상태에서-중앙과-가장-가까운-위젯을-찾기">스크롤이 끝나면 현재 스크롤 상태에서 중앙과 가장 가까운 위젯을 찾기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UWidget</span><span class="o">*</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">FindTargetWidget</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UWidget</span><span class="o">*&gt;&amp;</span> <span class="n">WidgetList</span> <span class="o">=</span> <span class="n">Parent</span><span class="o">-&gt;</span><span class="n">GetAllChildren</span><span class="p">();</span>
+ <span class="n">int32</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">WidgetSize</span><span class="p">;</span>
+ <span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">ScrollOffset</span><span class="p">;</span>
+ <span class="k">const</span> <span class="kt">bool</span> <span class="n">bIsVertical</span> <span class="o">=</span> <span class="n">Orientation</span> <span class="o">==</span> <span class="n">Orient_Vertical</span><span class="p">;</span>
+ <span class="n">UWidget</span><span class="o">*</span> <span class="n">Widget</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+ <span class="k">do</span>
+ <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WidgetList</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+         <span class="k">break</span><span class="p">;</span>
+     <span class="n">UWidget</span><span class="o">*</span> <span class="n">elem</span> <span class="o">=</span> <span class="n">WidgetList</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+		
+     <span class="n">TSet</span><span class="o">&lt;</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;&gt;</span> <span class="n">WidgetsToFind</span><span class="p">;</span>
+     <span class="p">{</span>
+         <span class="n">WidgetsToFind</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">elem</span><span class="o">-&gt;</span><span class="n">TakeWidget</span><span class="p">());</span>
+     <span class="p">}</span>
+     <span class="n">TMap</span><span class="o">&lt;</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">FArrangedWidget</span><span class="o">&gt;</span> <span class="n">Result</span><span class="p">;</span>
+     <span class="n">FindChildGeometries</span><span class="p">(</span><span class="n">CachedGeometry</span><span class="p">,</span> <span class="n">WidgetsToFind</span><span class="p">,</span> <span class="n">Result</span><span class="p">);</span>
+     <span class="k">if</span> <span class="p">(</span><span class="k">const</span> <span class="n">FArrangedWidget</span><span class="o">*</span> <span class="n">WidgetGeometry</span> <span class="o">=</span> <span class="n">Result</span><span class="p">.</span><span class="n">Find</span><span class="p">(</span><span class="n">elem</span><span class="o">-&gt;</span><span class="n">TakeWidget</span><span class="p">()))</span>
+     <span class="p">{</span>
+         <span class="k">auto</span> <span class="n">LocalSize</span> <span class="o">=</span> <span class="n">WidgetGeometry</span><span class="o">-&gt;</span><span class="n">Geometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">();</span>
+         <span class="k">auto</span> <span class="n">FindWidgetVector</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">AbsoluteToLocal</span><span class="p">(</span><span class="n">WidgetGeometry</span><span class="o">-&gt;</span><span class="n">Geometry</span><span class="p">.</span><span class="n">GetAbsolutePosition</span><span class="p">())</span> <span class="o">+</span> <span class="p">(</span><span class="n">LocalSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+         <span class="k">auto</span> <span class="n">MyVector</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">()</span> <span class="o">*</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mf">0.5</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.5</span><span class="n">f</span><span class="p">);</span>
+         <span class="k">const</span> <span class="kt">float</span> <span class="n">WidgetPosition</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">FindWidgetVector</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">FindWidgetVector</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="k">const</span> <span class="kt">float</span> <span class="n">MyPosition</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">MyVector</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">MyVector</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">||</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">GetValue</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">WidgetPosition</span> <span class="o">-</span> <span class="n">MyPosition</span><span class="p">))</span>
+         <span class="p">{</span>
+             <span class="n">Widget</span> <span class="o">=</span> <span class="n">elem</span><span class="p">;</span>
+             <span class="n">ScrollOffset</span> <span class="o">=</span> <span class="n">WidgetPosition</span> <span class="o">-</span> <span class="n">MyPosition</span><span class="p">;</span>
+         <span class="p">}</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WidgetSize</span><span class="p">.</span><span class="n">IsSet</span><span class="p">())</span>
+         <span class="p">{</span>
+             <span class="n">WidgetSize</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">LocalSize</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">LocalSize</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="p">}</span>
+     <span class="p">}</span>
+     <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="k">while</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">WidgetList</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">WidgetSize</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">?</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">?</span> <span class="n">ScrollOffset</span><span class="p">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">WidgetSize</span><span class="p">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">:</span> <span class="nb">true</span><span class="p">);</span>
+ <span class="k">return</span> <span class="n">Widget</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <h5 id="각-자식-위젯에-대해-다음을-수행한다">각 자식 위젯에 대해 다음을 수행한다.</h5>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   * 위젯 위치 계산
+   * 위젯의 위치와 스크롤박스의 중앙 위치 사이 거리 계산
+   * 이 거리가 위젯의 절반 크기보다 작으면 해당 위젯을 반환
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <h3 id="찾은-위젯을-중앙으로-옮기기">찾은 위젯을 중앙으로 옮기기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">ScrollModify</span><span class="p">()</span>
+<span class="p">{</span>
+ <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsOk</span><span class="p">())</span>
+     <span class="k">return</span><span class="p">;</span>
+		
+ <span class="k">if</span> <span class="p">(</span><span class="n">WidgetToFind</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="n">ScrollDescendantIntoView</span><span class="p">(</span><span class="n">WidgetToFind</span><span class="o">-&gt;</span><span class="n">GetCachedWidget</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">EDescendantScrollDestination</span><span class="o">::</span><span class="n">Center</span><span class="p">);</span>
+     <span class="n">WidgetToFind</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+     <span class="k">return</span><span class="p">;</span>
+ <span class="p">}</span>
+
+
+ <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsCenter</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">))</span>
+ <span class="p">{</span>
+     <span class="k">const</span> <span class="k">auto</span> <span class="n">FindWidget</span> <span class="o">=</span> <span class="n">FindTargetWidget</span><span class="p">();</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">TargetWidget</span> <span class="o">!=</span> <span class="n">FindWidget</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">OnAutoUnSelectedScrollBoxItem</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">);</span>
+         <span class="n">TargetWidget</span> <span class="o">=</span> <span class="n">FindWidget</span><span class="p">;</span>
+         <span class="n">OnAutoSelectedScrollBoxItem</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">);</span>
+     <span class="p">}</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">TargetWidget</span><span class="p">)</span>
+         <span class="n">ScrollDescendantIntoView</span><span class="p">(</span><span class="n">TargetWidget</span><span class="o">-&gt;</span><span class="n">GetCachedWidget</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">EDescendantScrollDestination</span><span class="o">::</span><span class="n">Center</span><span class="p">);</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <h4 id="scrollmodify">ScrollModify</h4>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   * 스크롤 박스 위치를 수정할 수 있는지 확인 (스크롤링과 터치)```(!bTouchPanningCaputre&amp;&amp;!bIsScrolling)```
+   * ```WidgetToFind```가 설정되어 있는지 확인 (설정되어 있다면 ```ScrollDecendantIntoView``` 함수를 호출하여 이동)
+   * 현재 ```TargetWidget```이 중앙에 있는지 확인하고 중앙에 위치하지 않다면 ```FindTargetWidget``` 함수를 호출하여 새 타겟을 찾고 새 타겟이 현재 타겟과 다르면 ```OnAutoUnSelectedScrollBoxItem``` 이벤트를 발생시켜 현재 타겟 위젯의 선택이 해제되었음을 알리고, ```OnAutoSelectedScrollBoxItem```이벤트를 발생시켜 새로운 타겟 위젯이 선택되었음을 알린다.
+   * 그리고 ```ScrollDecendantIntoView``` 를 호출하여 다시 중앙 위치로 조정한다.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <h3 id="나머지">나머지</h3>
+    <p>이제 따로 구현한 스크롤 아이템 위젯에 위젯과 스크롤 센터의 갭을 계산해서 각 위젯으로 보내 애니메이션을 재생하거나 위젯의 사이즈를 수정하면 된다.</p>
+  </li>
+</ol>
+
+<p><img src="https://github.com/piraxis2/AutoSelectScroll_UE5/raw/master/Animation.gif" alt="image" /><em>완성</em></p>
+
+<p><a href="https://github.com/piraxis2/AutoSelectScroll_UE5">깃헙링크</a></p>
+
+
+</div>
+
+
+
+
+<div class="related">
+  <h2>related posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2024/05/05/TestPost.html">
+            테스트 포스트
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+  
+  <h2>all tags</h2>
+  <div class="tag-cloud"><a href="/tag/ue5%2C/" class="set-5">UE5,</a> <a href="/tag/uscrollbox/" class="set-5">UScrollBox</a> <a href="/tag/%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A7%80/" class="set-5">개발일지</a></div>
+  
+
+
+<p>여기서부터</p>
+<script src="https://utteranc.es/client.js"
+        repo="piraxis2/blogcomments"
+        issue-term="pathname"
+        theme="gruvbox-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+<p>여기까지</p>
+
+
+<script>
+  let i = 0;
+  const text = '';
+  const speed = parseInt('50');
+  
+  function typeWriter() {
+    if (i < text.length) {
+      document.getElementById('animated-post-description').innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
+    }
+  }
+
+  document.getElementById('animated-post-description').style.display = 'initial';
+  typeWriter();
+
+  // Image modal
+  var $imgs = [];
+  $('img').each(function(idx) {
+    var obj = {
+      src: $(this).attr('src')
+    }
+    $imgs.push(obj);
+    var elem = $(this);
+    $(this).click(function() {
+      $('.modal').magnificPopup('open', idx);
+    });
+  });
+
+  $('.modal').magnificPopup({
+    items: $imgs,
+    type: 'image',
+    closeOnContentClick: true,
+    mainClass: 'mfp-img-mobile',
+    image: {
+      verticalFit: true
+    }
+    
+  });
+</script>
+
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="credits"><a href="https://github.com/bitbrain/jekyll-dash">dash</a> theme for Jekyll by <a href="https://github.com/bitbrain">bitbrain</a> made with <i class="fas fa-heart"></i><div class="toggleWrapper">
+    <input type="checkbox" class="dn" id="theme-toggle" onclick="modeSwitcher()" checked />
+    <label for="theme-toggle" class="toggle">
+    <span class="toggle__handler">
+      <span class="crater crater--1"></span>
+      <span class="crater crater--2"></span>
+      <span class="crater crater--3"></span>
+    </span>
+        <span class="star star--1"></span>
+        <span class="star star--2"></span>
+        <span class="star star--3"></span>
+        <span class="star star--4"></span>
+        <span class="star star--5"></span>
+        <span class="star star--6"></span>
+    </label>
+</div>
+<script type="text/javascript">
+const theme = localStorage.getItem('theme');
+
+if (theme === "light") {
+    document.documentElement.setAttribute('data-theme', 'light');
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+}
+const userPrefers = getComputedStyle(document.documentElement).getPropertyValue('content');
+
+function activateDarkTheme() {
+    document.getElementById('theme-toggle').checked = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('theme--dark');
+    document.documentElement.classList.remove('theme--light');
+	document.getElementById("theme-toggle").className = 'light';
+	window.localStorage.setItem('theme', 'dark');
+}
+
+function activateLightTheme() {
+    document.getElementById('theme-toggle').checked = false;
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.add('theme--light');
+    document.documentElement.classList.remove('theme--dark');
+	document.getElementById("theme-toggle").className = 'dark';
+	window.localStorage.setItem('theme', 'light');
+}
+
+if (theme === "dark") {
+    activateDarkTheme();
+} else if (theme === "light") {
+    activateLightTheme();
+} else if  (userPrefers === "light") {
+    activateDarkTheme();
+} else {
+    activateDarkTheme();
+}
+
+function modeSwitcher() {
+	let currentMode = document.documentElement.getAttribute('data-theme');
+	if (currentMode === "dark") {
+	    activateLightTheme();
+	} else {
+	    activateDarkTheme();
+	}
+}
+</script></div>
+  </div>
+</footer>
+
+
+<script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+  </body>
+
+</html>

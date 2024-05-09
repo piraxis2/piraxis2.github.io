@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://piraxis2.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://piraxis2.github.io//" rel="alternate" type="text/html" /><updated>2024-05-09T22:31:03+09:00</updated><id>https://piraxis2.github.io//feed.xml</id><title type="html">piraxis</title><subtitle>hi
+</subtitle><author><name>GitHub User</name></author><entry><title type="html">[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox</title><link href="https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html" rel="alternate" type="text/html" title="[UE5,UMG] 중앙에서 가장 가까운 위젯을 고정해주는 ScrollBox" /><published>2024-05-06T00:00:00+09:00</published><updated>2024-05-06T00:00:00+09:00</updated><id>https://piraxis2.github.io//2024/05/06/%5BUE5,UMG%5D%20%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C%20%EA%B0%80%EC%9E%A5%20%EA%B0%80%EA%B9%8C%EC%9A%B4%20%EC%9C%84%EC%A0%AF%EC%9D%84%20%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94%20ScrollBox</id><content type="html" xml:base="https://piraxis2.github.io//2024/05/06/UE5,UMG-%EC%A4%91%EC%95%99%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EA%B0%80%EA%B9%8C%EC%9A%B4-%EC%9C%84%EC%A0%AF%EC%9D%84-%EA%B3%A0%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94-ScrollBox.html"><![CDATA[<p>예전에 만들어 뒀던걸 정리하는 포스트</p>
+
+<p><img src="/assets/img/RefAnimation.gif" alt="image" /><em>이런 형태의 지정한 곳에서 가장 가까운 자식 위젯을 끌어당기며 강조하는 위젯이 필요하다.</em></p>
+
+<ol>
+  <li>
+    <h3 id="스크롤의-0번-자식-위젯과-num-1번-자식-위젯이-최상단-혹은-최하단에-위치하지-않도록-공간-만들기">스크롤의 0번 자식 위젯과 (Num-1)번 자식 위젯이 최상단 혹은 최하단에 위치하지 않도록 공간 만들기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">FillEmptyArea</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="n">FVector2D</span> <span class="n">EmptySize2D</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">()</span> <span class="o">*</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mf">0.5</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.5</span><span class="n">f</span><span class="p">);</span>
+ <span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="k">auto</span> <span class="n">NewSlotArguments</span> <span class="o">=</span> <span class="n">SScrollBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">();</span>
+     <span class="n">SScrollBox</span><span class="o">::</span><span class="n">FSlot</span><span class="o">&amp;</span> <span class="n">NewSlot</span> <span class="o">=</span> <span class="o">*</span><span class="n">NewSlotArguments</span><span class="p">.</span><span class="n">GetSlot</span><span class="p">();</span>
+     <span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SSpacer</span><span class="o">&gt;</span> <span class="n">Spacer</span> <span class="o">=</span> <span class="n">SNew</span><span class="p">(</span><span class="n">SSpacer</span><span class="p">).</span><span class="n">Size</span><span class="p">(</span><span class="n">EmptySize2D</span><span class="p">);</span>
+     <span class="n">NewSlot</span>
+     <span class="p">[</span>
+       <span class="n">Spacer</span>
+     <span class="p">];</span>
+     <span class="n">ScrollPanel</span><span class="o">-&gt;</span><span class="n">Children</span><span class="p">.</span><span class="n">InsertSlot</span><span class="p">(</span><span class="n">MoveTemp</span><span class="p">(</span><span class="n">NewSlotArguments</span><span class="p">),</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">ScrollPanel</span><span class="o">-&gt;</span><span class="n">Children</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+ <span class="p">}</span>	
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <p>해당 함수는 <code class="language-plaintext highlighter-rouge">tick</code>에서 <code class="language-plaintext highlighter-rouge">SAutoSelectScrollBox</code>의<code class="language-plaintext highlighter-rouge">CachedGeometry</code>가 채워질 때 까지 기다렸다가 호출된다. (위젯의 Geometry가 계산되기 전에 위젯의 크기를 가져오려 하면 0을 반환하기 때문)</p>
+  </li>
+  <li>
+    <h3 id="스크롤이-끝나면-현재-스크롤-상태에서-중앙과-가장-가까운-위젯을-찾기">스크롤이 끝나면 현재 스크롤 상태에서 중앙과 가장 가까운 위젯을 찾기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UWidget</span><span class="o">*</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">FindTargetWidget</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UWidget</span><span class="o">*&gt;&amp;</span> <span class="n">WidgetList</span> <span class="o">=</span> <span class="n">Parent</span><span class="o">-&gt;</span><span class="n">GetAllChildren</span><span class="p">();</span>
+ <span class="n">int32</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">WidgetSize</span><span class="p">;</span>
+ <span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">ScrollOffset</span><span class="p">;</span>
+ <span class="k">const</span> <span class="kt">bool</span> <span class="n">bIsVertical</span> <span class="o">=</span> <span class="n">Orientation</span> <span class="o">==</span> <span class="n">Orient_Vertical</span><span class="p">;</span>
+ <span class="n">UWidget</span><span class="o">*</span> <span class="n">Widget</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+ <span class="k">do</span>
+ <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WidgetList</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+         <span class="k">break</span><span class="p">;</span>
+     <span class="n">UWidget</span><span class="o">*</span> <span class="n">elem</span> <span class="o">=</span> <span class="n">WidgetList</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+		
+     <span class="n">TSet</span><span class="o">&lt;</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;&gt;</span> <span class="n">WidgetsToFind</span><span class="p">;</span>
+     <span class="p">{</span>
+         <span class="n">WidgetsToFind</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">elem</span><span class="o">-&gt;</span><span class="n">TakeWidget</span><span class="p">());</span>
+     <span class="p">}</span>
+     <span class="n">TMap</span><span class="o">&lt;</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">FArrangedWidget</span><span class="o">&gt;</span> <span class="n">Result</span><span class="p">;</span>
+     <span class="n">FindChildGeometries</span><span class="p">(</span><span class="n">CachedGeometry</span><span class="p">,</span> <span class="n">WidgetsToFind</span><span class="p">,</span> <span class="n">Result</span><span class="p">);</span>
+     <span class="k">if</span> <span class="p">(</span><span class="k">const</span> <span class="n">FArrangedWidget</span><span class="o">*</span> <span class="n">WidgetGeometry</span> <span class="o">=</span> <span class="n">Result</span><span class="p">.</span><span class="n">Find</span><span class="p">(</span><span class="n">elem</span><span class="o">-&gt;</span><span class="n">TakeWidget</span><span class="p">()))</span>
+     <span class="p">{</span>
+         <span class="k">auto</span> <span class="n">LocalSize</span> <span class="o">=</span> <span class="n">WidgetGeometry</span><span class="o">-&gt;</span><span class="n">Geometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">();</span>
+         <span class="k">auto</span> <span class="n">FindWidgetVector</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">AbsoluteToLocal</span><span class="p">(</span><span class="n">WidgetGeometry</span><span class="o">-&gt;</span><span class="n">Geometry</span><span class="p">.</span><span class="n">GetAbsolutePosition</span><span class="p">())</span> <span class="o">+</span> <span class="p">(</span><span class="n">LocalSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+         <span class="k">auto</span> <span class="n">MyVector</span> <span class="o">=</span> <span class="n">CachedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">()</span> <span class="o">*</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mf">0.5</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.5</span><span class="n">f</span><span class="p">);</span>
+         <span class="k">const</span> <span class="kt">float</span> <span class="n">WidgetPosition</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">FindWidgetVector</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">FindWidgetVector</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="k">const</span> <span class="kt">float</span> <span class="n">MyPosition</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">MyVector</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">MyVector</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">||</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">GetValue</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">WidgetPosition</span> <span class="o">-</span> <span class="n">MyPosition</span><span class="p">))</span>
+         <span class="p">{</span>
+             <span class="n">Widget</span> <span class="o">=</span> <span class="n">elem</span><span class="p">;</span>
+             <span class="n">ScrollOffset</span> <span class="o">=</span> <span class="n">WidgetPosition</span> <span class="o">-</span> <span class="n">MyPosition</span><span class="p">;</span>
+         <span class="p">}</span>
+         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WidgetSize</span><span class="p">.</span><span class="n">IsSet</span><span class="p">())</span>
+         <span class="p">{</span>
+             <span class="n">WidgetSize</span> <span class="o">=</span> <span class="n">bIsVertical</span> <span class="o">?</span> <span class="n">LocalSize</span><span class="p">.</span><span class="n">Y</span> <span class="o">:</span> <span class="n">LocalSize</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+         <span class="p">}</span>
+     <span class="p">}</span>
+     <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="k">while</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">WidgetList</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">WidgetSize</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">?</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">ScrollOffset</span><span class="p">.</span><span class="n">IsSet</span><span class="p">()</span> <span class="o">?</span> <span class="n">ScrollOffset</span><span class="p">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">WidgetSize</span><span class="p">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">:</span> <span class="nb">true</span><span class="p">);</span>
+ <span class="k">return</span> <span class="n">Widget</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <h5 id="각-자식-위젯에-대해-다음을-수행한다">각 자식 위젯에 대해 다음을 수행한다.</h5>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   * 위젯 위치 계산
+   * 위젯의 위치와 스크롤박스의 중앙 위치 사이 거리 계산
+   * 이 거리가 위젯의 절반 크기보다 작으면 해당 위젯을 반환
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <h3 id="찾은-위젯을-중앙으로-옮기기">찾은 위젯을 중앙으로 옮기기</h3>
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">SAutoSelectScrollBox</span><span class="o">::</span><span class="n">ScrollModify</span><span class="p">()</span>
+<span class="p">{</span>
+ <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsOk</span><span class="p">())</span>
+     <span class="k">return</span><span class="p">;</span>
+		
+ <span class="k">if</span> <span class="p">(</span><span class="n">WidgetToFind</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="n">ScrollDescendantIntoView</span><span class="p">(</span><span class="n">WidgetToFind</span><span class="o">-&gt;</span><span class="n">GetCachedWidget</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">EDescendantScrollDestination</span><span class="o">::</span><span class="n">Center</span><span class="p">);</span>
+     <span class="n">WidgetToFind</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+     <span class="k">return</span><span class="p">;</span>
+ <span class="p">}</span>
+
+
+ <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsCenter</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">))</span>
+ <span class="p">{</span>
+     <span class="k">const</span> <span class="k">auto</span> <span class="n">FindWidget</span> <span class="o">=</span> <span class="n">FindTargetWidget</span><span class="p">();</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">TargetWidget</span> <span class="o">!=</span> <span class="n">FindWidget</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">OnAutoUnSelectedScrollBoxItem</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">);</span>
+         <span class="n">TargetWidget</span> <span class="o">=</span> <span class="n">FindWidget</span><span class="p">;</span>
+         <span class="n">OnAutoSelectedScrollBoxItem</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">TargetWidget</span><span class="p">);</span>
+     <span class="p">}</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">TargetWidget</span><span class="p">)</span>
+         <span class="n">ScrollDescendantIntoView</span><span class="p">(</span><span class="n">TargetWidget</span><span class="o">-&gt;</span><span class="n">GetCachedWidget</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">EDescendantScrollDestination</span><span class="o">::</span><span class="n">Center</span><span class="p">);</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <h4 id="scrollmodify">ScrollModify</h4>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   * 스크롤 박스 위치를 수정할 수 있는지 확인 (스크롤링과 터치)```(!bTouchPanningCaputre&amp;&amp;!bIsScrolling)```
+   * ```WidgetToFind```가 설정되어 있는지 확인 (설정되어 있다면 ```ScrollDecendantIntoView``` 함수를 호출하여 이동)
+   * 현재 ```TargetWidget```이 중앙에 있는지 확인하고 중앙에 위치하지 않다면 ```FindTargetWidget``` 함수를 호출하여 새 타겟을 찾고 새 타겟이 현재 타겟과 다르면 ```OnAutoUnSelectedScrollBoxItem``` 이벤트를 발생시켜 현재 타겟 위젯의 선택이 해제되었음을 알리고, ```OnAutoSelectedScrollBoxItem```이벤트를 발생시켜 새로운 타겟 위젯이 선택되었음을 알린다.
+   * 그리고 ```ScrollDecendantIntoView``` 를 호출하여 다시 중앙 위치로 조정한다.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <h3 id="나머지">나머지</h3>
+    <p>이제 따로 구현한 스크롤 아이템 위젯에 위젯과 스크롤 센터의 갭을 계산해서 각 위젯으로 보내 애니메이션을 재생하거나 위젯의 사이즈를 수정하면 된다.</p>
+  </li>
+</ol>
+
+<p><img src="https://github.com/piraxis2/AutoSelectScroll_UE5/raw/master/Animation.gif" alt="image" /><em>완성</em></p>
+
+<p><a href="https://github.com/piraxis2/AutoSelectScroll_UE5">깃헙링크</a></p>]]></content><author><name>GitHub User</name></author><category term="UE5," /><category term="UScrollBox" /><summary type="html"><![CDATA[예전에 만들어 뒀던걸 정리하는 포스트]]></summary></entry><entry><title type="html">테스트 포스트</title><link href="https://piraxis2.github.io//2024/05/05/TestPost.html" rel="alternate" type="text/html" title="테스트 포스트" /><published>2024-05-05T00:00:00+09:00</published><updated>2024-05-05T00:00:00+09:00</updated><id>https://piraxis2.github.io//2024/05/05/TestPost</id><content type="html" xml:base="https://piraxis2.github.io//2024/05/05/TestPost.html"><![CDATA[<p><img src="/assets/img/wisp.png" alt="image" />
+테스트 포스트</p>]]></content><author><name>GitHub User</name></author><category term="개발일지" /><summary type="html"><![CDATA[테스트 포스트]]></summary></entry></feed>
