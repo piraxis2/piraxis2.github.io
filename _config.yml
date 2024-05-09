@@ -17,7 +17,7 @@ repository: "piraxis2/blogcomments"
 comments:
   provider: "utterances"
   utterances:
-    theme: "gruvbox-drak"
+    theme: "github-dark"
     issue_term: "pathname"
 
 # jekyll-dash date format

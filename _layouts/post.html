@@ -47,6 +47,15 @@ layout: default
 </div>
 {% endif %}
 {% include tagcloud.html %}
+<p>여기서부터</p>
+<script src="https://utteranc.es/client.js"
+        repo="piraxis2/blogcomments"
+        issue-term="pathname"
+        theme="gruvbox-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+<p>여기까지</p>
 
 {% assign animation_speed = site.dash.animation_speed | default: 50 %}
 <script>
@@ -89,10 +98,4 @@ layout: default
     
   });
 </script>
-<script src="https://utteranc.es/client.js"
-        repo="piraxis2/blogcomment"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-</script>
+
