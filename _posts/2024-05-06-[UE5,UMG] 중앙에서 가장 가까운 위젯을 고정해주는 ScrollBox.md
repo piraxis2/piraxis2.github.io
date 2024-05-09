@@ -112,8 +112,8 @@ void SAutoSelectScrollBox::ScrollModify()
 	}
 }
 ```
---
-* 스크롤 박스 위치를 수정할 수 있는지 확인```(!bTouchPanningCaputre&&!bIsScrolling)```
+#### ScrollModify
+* 스크롤 박스 위치를 수정할 수 있는지 확인 (스크롤링과 터치)```(!bTouchPanningCaputre&&!bIsScrolling)```
 * ```WidgetToFind```가 설정되어 있는지 확인 (설정되어 있다면 ```ScrollDecendantIntoView``` 함수를 호출하여 이동)
 * 현재 ```TargetWidget```이 중앙에 있는지 확인하고 중앙에 위치하지 않다면 ```FindTargetWidget``` 함수를 호출하여 새 타겟을 찾고 새 타겟이 현재 타겟과 다르면 ```OnAutoUnSelectedScrollBoxItem``` 이벤트를 발생시켜 현재 타겟 위젯의 선택이 해제되었음을 알리고, ```OnAutoSelectedScrollBoxItem```이벤트를 발생시켜 새로운 타겟 위젯이 선택되었음을 알린다.
 * 그리고 ```ScrollDecendantIntoView``` 를 호출하여 다시 중앙 위치로 조정한다.
